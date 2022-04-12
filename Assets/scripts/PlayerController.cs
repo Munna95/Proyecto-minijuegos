@@ -8,18 +8,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runningSpeed = 14f;
     [SerializeField] private float cooldownTime = 15f;
     [SerializeField] private float speedBoostDuration = 5f;
-    float speed = 9;
+    public float speed = 9;
     public bool isOnCooldown = false;
-    Vector2 direction;
+    public Vector3 direction;
+    SpriteRenderer characterSprite;
+    Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        characterSprite = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         ObtainInput();
         //si no esta corriendo, y apreta shift izquierda corre.
@@ -45,20 +48,22 @@ public class PlayerController : MonoBehaviour
 
     void ObtainInput()
     {
-        direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        direction = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
         direction.Normalize();
     }
 
-    void MoveCharacter(Vector2 position)
+    void MoveCharacter(Vector3 position)
     {
-        transform.Translate(position * Time.deltaTime * speed);
+        rb.MovePosition(transform.position + position * Time.deltaTime * speed);
     }
 
     IEnumerator Run(float time)
     {
+        characterSprite.color = Color.red;
         speed = runningSpeed;
         StartCoroutine("ActivateCooldown",cooldownTime);
         yield return new WaitForSeconds(time);
+        characterSprite.color = Color.white;
         speed = walkingSpeed;
 
     }
