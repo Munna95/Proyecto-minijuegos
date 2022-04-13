@@ -102,7 +102,7 @@ public class PlayerController_Carrera : MonoBehaviour
 
     public void tpBack()
     {
-        transform.position = inicialPosition;
+        transform.position = inicialPosition; // puto el que lee
     }
 
 
